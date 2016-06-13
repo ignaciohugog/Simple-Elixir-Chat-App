@@ -12,28 +12,28 @@ The user functions are:
 - notify finshing reading
 """
 
-	def start do
-		spawn fn -> loop [] end
-	end
+  def start do
+    spawn fn -> loop [] end
+  end
 
-	def loop(users) do
-		receive do
-			{:connect, server, name} ->
-				send server, {:connect, self, name}
-				loop users
+  def loop(users) do
+    receive do
+      {:connect, server, name} ->
+        send server, {:connect, self, name}
+        loop users
 
-			{:update, users} ->
-				IO.inspect(users)
-				loop users
+      {:update, users} ->
+        IO.inspect(users)
+        loop users
 
-			{:send, from, msg} ->
-				IO.puts "[Client] #{Dict.get(users, from)} says: #{msg}"
-				send from, {:seen, self, "has seen [#{msg}]"}
-				loop users
+      {:send, from, msg} ->
+        IO.puts "[Client] #{Dict.get(users, from)} says: #{msg}"
+        send from, {:seen, self, "has seen [#{msg}]"}
+        loop users
 
-			{:seen, from, msg} ->
-				IO.puts "[Client] #{Dict.get(users, from)}: #{msg}"
-				loop users
-		end
-	end
+      {:seen, from, msg} ->
+        IO.puts "[Client] #{Dict.get(users, from)}: #{msg}"
+        loop users
+    end
+  end
 end
