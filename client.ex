@@ -1,4 +1,3 @@
-
 defmodule Client do
 @moduledoc """
 The user functions are:
@@ -11,7 +10,6 @@ The user functions are:
 - mute user
 - create brodcast (talk with all available users)
 - notify finshing reading
-
 """
 
 	def start do
@@ -27,8 +25,8 @@ The user functions are:
 			{:update, users} ->
 				IO.inspect(users)
 				loop users
-		
-			{:send, from, msg} ->				 
+
+			{:send, from, msg} ->
 				IO.puts "[Client] #{Dict.get(users, from)} says: #{msg}"
 				send from, {:seen, self, "has seen [#{msg}]"}
 				loop users
@@ -36,6 +34,6 @@ The user functions are:
 			{:seen, from, msg} ->
 				IO.puts "[Client] #{Dict.get(users, from)}: #{msg}"
 				loop users
-		end		
+		end
 	end
 end

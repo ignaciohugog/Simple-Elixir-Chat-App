@@ -1,29 +1,25 @@
-#TODO:STRUCTS
-#LIB COMMONS
-#FORMAT AND CONVENTIONS
-
 defmodule Server do
 @moduledoc """
 The server functions are:
-- receive new users 
+- receive new users
 - storage new users
 - update users list for each one
 """
 
-	def start do
-		spawn fn -> loop(%{}) end
-	end
+  def start do
+    spawn fn -> loop(%{}) end
+  end
 
 
-	def loop(users) do
-		receive do 
-			{:connect, from, name} ->	
-				IO.puts "[Server] #{name} joins to the chat"
-				new_users = Dict.put_new users, from, name
-				Enum.each(new_users, fn({s,_}) -> send s, {:update, new_users} end)
-				loop new_users
-			end
-	end
+  def loop(users) do
+    receive do
+      {:connect, from, name} ->
+        IO.puts "[Server] #{name} joins to the chat"
+        new_users = Dict.put_new users, from, name
+        Enum.each(new_users, fn({s,_}) -> send s, {:update, new_users} end)
+        loop new_users
+      end
+  end
 end
 
 
