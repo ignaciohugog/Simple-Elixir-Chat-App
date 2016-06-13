@@ -1,33 +1,38 @@
+#TODO:STRUCTS
+#LIB COMMONS
+#FORMAT AND CONVENTIONS
 
-defmodule Server do 
-@doc """
+defmodule Server do
+@moduledoc """
 The server functions are:
 - receive new users 
 - storage new users
-- retrieve for each new user a list of availables users 
-- update users state to the already connected users 
-  (user connects/disconnects)
+- update users list for each one
 """
 
-	def init do
-		spawn(Server, :incoming_user,[%{}])	
+	def start do
+		spawn fn -> loop(%{}) end
 	end
 
-	def incoming_user(users) do
+
+	def loop(users) do
 		receive do 
-			{from, user_name} ->	
-				IO.puts("New user!")
-				notifyUsers(users, {from, user_name})				
-				incoming_user(Dict.put_new(users, from, user_name))
+			{:connect, from, name} ->	
+				IO.puts "[Server] #{name} joins to the chat"
+				new_users = Dict.put_new users, from, name
+				Enum.each(new_users, fn({s,_}) -> send s, {:update, new_users} end)
+				loop new_users
 			end
-	end
-
-	def notifyUsers(users, newUser) do
-		#TODO
-		#for each users notify the new connection (new user)
-		IO.puts("notify users!, current:")
-		IO.inspect(users)
-		IO.inspect(newUser)
 	end
 end
 
+
+
+# c("Server.ex")
+# c("Client.ex")
+# s = Server.start
+# c1 = Client.start
+# c2 = Client.start
+# send c1, {:connect, s, "nam1"}
+# send c2, {:connect, s, "nam2"}
+# send c1, {:send, c2, "helloo"}
