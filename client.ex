@@ -27,7 +27,6 @@ defmodule Client do
         Enum.each(group, fn(u) -> send u, {:receive, self, msg} end)
         loop users, chats, muted
 
-
       {:write, recipient, msg} ->
         send recipient, {:writting, Dict.get(users, self)}
         :timer.sleep(10000)
