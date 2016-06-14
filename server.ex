@@ -6,7 +6,7 @@ defmodule Server do
 """
 
   def start do
-    spawn fn -> loop %{} end
+    spawn __MODULE__, :loop, [%{}]
   end
 
 

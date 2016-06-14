@@ -11,7 +11,7 @@ defmodule Client do
 """
 
   def start do
-    spawn fn -> loop %{}, %{}, %{} end
+    spawn __MODULE__, :loop, [%{}, %{}, %{}]
   end
 
   def loop(users, chats, muted) do
